@@ -1,0 +1,26 @@
+$sm: 768px;
+$md: 1024px;
+$lg: 1440px;
+
+$less-than-sm: $sm - 1px;
+
+@mixin mobile-only {
+	@media screen and (max-width: #{$less-than-sm}) {
+		@content;
+	}
+}
+@mixin sm {
+	@media screen and (min-width: #{$sm}) {
+		@content;
+	}
+}
+@mixin md {
+	@media all and (min-width: #{$md}) {
+		@content;
+	}
+}
+@mixin lg {
+	@media all and (min-width: #{$lg}) {
+		@content;
+	}
+}

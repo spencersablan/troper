@@ -1,0 +1,8 @@
+.logo {
+	font-size: 28px;
+	font-weight: 700;
+
+	@include sm {
+		font-size: 40px;
+	}
+}

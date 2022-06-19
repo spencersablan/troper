@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-5,700;0,400;0,700&display=swap");
+
+html,
+body {
+	font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+		Helvetica Neue, sans-serif;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 1.5;
+}
