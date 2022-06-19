@@ -1,9 +1,8 @@
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase-db";
+import { useAuth } from "../contexts/AuthContext";
 import styles from "../styles/components/headerUser.module.scss";
 
 export default function HeaderUser() {
-	const [user, loading, error] = useAuthState(auth);
+	const { user, loading, error } = useAuth();
 
 	return (
 		<>

@@ -2,12 +2,11 @@ import React from "react";
 import Header from "../components/Header";
 import Login from "../components/Login";
 import Home from "../components/Home";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase-db";
+import { useAuth } from "../contexts/AuthContext";
 import styles from "../styles/components/wrapper.module.scss";
 
 export default function Main() {
-	const [user, loading, error] = useAuthState(auth);
+	const { user, loading, error } = useAuth();
 
 	return (
 		<div className={styles.wrapper}>
