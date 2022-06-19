@@ -1,0 +1,26 @@
+.headerUser {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	column-gap: 10px;
+
+	&:hover {
+		cursor: pointer;
+	}
+
+	&Circle {
+		height: 40px;
+		width: 40px;
+		border-radius: 50%;
+		background-position: center;
+		background-size: cover;
+	}
+
+	&Name {
+		display: none;
+
+		@include sm {
+			display: block;
+		}
+	}
+}
