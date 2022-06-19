@@ -8,7 +8,7 @@
 		cursor: pointer;
 	}
 
-	&Circle {
+	.circle {
 		height: 40px;
 		width: 40px;
 		border-radius: 50%;
@@ -16,7 +16,7 @@
 		background-size: cover;
 	}
 
-	&Name {
+	.name {
 		display: none;
 
 		@include sm {

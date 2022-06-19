@@ -12,12 +12,12 @@ export default function HeaderUser() {
 			{user && (
 				<div className={styles.headerUser}>
 					<div
-						className={styles.headerUserCircle}
+						className={styles.circle}
 						style={{
 							backgroundImage: `url(${user.photoURL})`,
 						}}
 					></div>
-					<h5 className={styles.headerUserName}>{user.displayName}</h5>
+					<h5 className={styles.name}>{user.displayName}</h5>
 				</div>
 			)}
 		</>
