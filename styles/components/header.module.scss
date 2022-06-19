@@ -9,31 +9,4 @@
 	@include sm {
 		padding: 16px 56px;
 	}
-
-	&--user {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		column-gap: 10px;
-
-		&:hover {
-			cursor: pointer;
-		}
-
-		&--circle {
-			height: 32px;
-			width: 32px;
-			border-radius: 50%;
-			background-position: center;
-			background-size: cover;
-		}
-
-		&--name {
-			display: none;
-
-			@include sm {
-				display: block;
-			}
-		}
-	}
 }

@@ -1,0 +1,96 @@
+.home {
+	display: flex;
+	flex-direction: column;
+	row-gap: 42px;
+	width: 100%;
+
+	@include md {
+		max-width: 900px;
+		min-width: 700px;
+	}
+
+	@include lg {
+		width: unset;
+		max-width: 1072px;
+	}
+
+	&--greeting {
+		display: none;
+		font-weight: 700;
+		font-size: 40px;
+		text-align: left;
+
+		@include sm {
+			display: block;
+		}
+	}
+
+	&--students {
+		display: flex;
+		flex-direction: column;
+		row-gap: 32px;
+
+		&--header {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		&--title {
+			font-weight: 700;
+			font-size: 28px;
+			color: $ds-gray-5;
+			text-align: left;
+		}
+
+		&--add {
+			color: $ds-azure;
+			font-size: 40px;
+			line-height: 1;
+			width: 40px;
+			text-align: right;
+		}
+
+		&--list {
+			display: grid;
+			row-gap: 16px;
+
+			@include sm {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				column-gap: 16px;
+			}
+
+			@include md {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				row-gap: 24px;
+				column-gap: 24px;
+			}
+		}
+
+		&--student {
+			padding: 16px;
+			width: 100%;
+			border-radius: 6px;
+			background-color: $ds-white;
+			text-align: center;
+			font-weight: 700;
+			font-size: 16px;
+			transition: 0.3s;
+			perspective: 0;
+
+			@include md {
+				width: 250px;
+			}
+
+			&:hover {
+				transform: translateY(-5px);
+				box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+				cursor: pointer;
+			}
+		}
+	}
+}
