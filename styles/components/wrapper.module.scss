@@ -1,5 +1,19 @@
 .wrapper {
+	display: flex;
+	flex-direction: column;
 	height: 100vh;
 	width: 100vw;
 	background-color: $ds-gray-1;
+}
+
+.body {
+	display: flex;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+	padding: 16px;
+
+	@include sm {
+		padding: 42px 16px;
+	}
 }
