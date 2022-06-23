@@ -1,0 +1,51 @@
+.toggle {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	padding: 4px;
+	border-radius: 5px;
+	background-color: $ds-white;
+}
+
+.active {
+	color: $ds-azure;
+	border-color: currentColor;
+}
+
+.inactive {
+	color: $ds-gray-4;
+	border-color: $ds-white;
+}
+
+.option {
+	width: 50%;
+	border-radius: 5px;
+	border: 2px solid $ds-white;
+	text-align: center;
+	padding: 10px;
+	font-size: 16px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: 0.15s;
+	@extend .inactive;
+
+	&.optionA {
+		@extend .active;
+	}
+}
+
+.checkbox {
+	width: 0;
+	height: 0;
+	visibility: hidden;
+
+	&:checked {
+		~ .optionB {
+			@extend .active;
+		}
+
+		~ .optionA {
+			@extend .inactive;
+		}
+	}
+}

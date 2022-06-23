@@ -6,7 +6,11 @@ import Modal from "./Modal";
 import ModalBody from "./ModalBody";
 import ModalFooter from "./ModalFooter";
 import ModalHeader from "./ModalHeader";
+import mainStyles from "../styles/modules/modal-add-student.module.scss";
 import btnStyles from "../styles/components/button.module.scss";
+import inputStyles from "../styles/components/input.module.scss";
+import toggleStyles from "../styles/components/toggle.module.scss";
+import { useRef } from "react";
 
 export default function ModalAddStudent(props) {
 	// User
@@ -23,11 +27,23 @@ export default function ModalAddStudent(props) {
 			studentID: newStudentID,
 		});
 	};
+
+	// Handle gender toggler
+	const checkbox = useRef(null);
+
 	return (
 		<Modal>
 			<ModalHeader>Add Student</ModalHeader>
 			<ModalBody>
-				<p>Body of modal #1</p>
+				<div className={mainStyles.body}>
+					<input className={inputStyles.input} placeholder="First Name" />
+					<input className={inputStyles.input} placeholder="Last Name" />
+					<label className={toggleStyles.toggle}>
+						<input type="checkbox" className={toggleStyles.checkbox} />
+						<div className={`${toggleStyles.option} ${toggleStyles.optionA}`}>Male</div>
+						<div className={`${toggleStyles.option} ${toggleStyles.optionB}`}>Female</div>
+					</label>
+				</div>
 			</ModalBody>
 			<ModalFooter>
 				<button onClick={props.close} className={btnStyles.btn}>

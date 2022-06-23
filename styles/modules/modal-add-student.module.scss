@@ -1,0 +1,9 @@
+.body {
+	display: flex;
+	flex-direction: column;
+	row-gap: 12px;
+
+	@include sm {
+		row-gap: 18px;
+	}
+}

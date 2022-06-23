@@ -1,0 +1,17 @@
+.input {
+	width: 100%;
+	padding: 14px;
+	border: 2px solid $ds-white;
+	border-radius: 5px;
+	transition: 0.2s;
+
+	&:focus,
+	&:focus-visible {
+		border: 2px solid $ds-azure;
+		outline: none;
+	}
+
+	&::placeholder {
+		color: $ds-gray-4;
+	}
+}
