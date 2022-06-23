@@ -29,7 +29,7 @@
 	transition: 0.15s;
 	@extend .inactive;
 
-	&.optionA {
+	&.optionB {
 		@extend .active;
 	}
 }
@@ -40,11 +40,11 @@
 	visibility: hidden;
 
 	&:checked {
-		~ .optionB {
+		~ .optionA {
 			@extend .active;
 		}
 
-		~ .optionA {
+		~ .optionB {
 			@extend .inactive;
 		}
 	}
