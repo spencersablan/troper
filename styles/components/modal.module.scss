@@ -1,0 +1,26 @@
+.modalBackground {
+	display: grid;
+	place-items: center;
+	position: fixed;
+	background-color: rgba(0, 0, 0, 0.7);
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	padding: 8px;
+}
+
+.modal {
+	width: 100%;
+	max-width: 664px;
+	padding: 16px;
+	background-color: $ds-gray-1;
+	border-radius: 8px;
+
+	@include sm {
+		padding: 32px;
+	}
+}
+
+.modalContent {
+}

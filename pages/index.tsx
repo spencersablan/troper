@@ -4,6 +4,7 @@ import Login from "../components/Login";
 import Home from "../components/Home";
 import { useAuth } from "../contexts/AuthContext";
 import styles from "../styles/components/wrapper.module.scss";
+import ModalRoot from "../components/ModalRoot";
 
 export default function Main() {
 	const { user, loading, error } = useAuth();
@@ -18,6 +19,7 @@ export default function Main() {
 
 				{user && <Home />}
 			</div>
+			<ModalRoot />
 		</div>
 	);
 }
