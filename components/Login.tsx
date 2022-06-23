@@ -1,7 +1,7 @@
 import { GoogleAuthProvider } from "firebase/auth";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { auth } from "../firebase/firebase-db";
-import styles from "../styles/components/login.module.scss";
+import styles from "../styles/modules/login.module.scss";
 
 // Configure FirebaseUI
 const uiConfig = {

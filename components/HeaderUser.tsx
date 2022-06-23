@@ -1,5 +1,5 @@
 import { useAuth } from "../contexts/AuthContext";
-import styles from "../styles/components/headerUser.module.scss";
+import styles from "../styles/modules/headerUser.module.scss";
 
 export default function HeaderUser() {
 	const { user, loading, error } = useAuth();

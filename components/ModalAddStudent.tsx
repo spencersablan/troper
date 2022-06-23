@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import ModalBody from "./ModalBody";
 import ModalFooter from "./ModalFooter";
 import ModalHeader from "./ModalHeader";
+import btnStyles from "../styles/components/button.module.scss";
 
 export default function ModalAddStudent(props) {
 	// User
@@ -24,13 +25,13 @@ export default function ModalAddStudent(props) {
 	};
 	return (
 		<Modal>
-			<ModalHeader>This is a test</ModalHeader>
+			<ModalHeader>Add Student</ModalHeader>
 			<ModalBody>
 				<p>Body of modal #1</p>
 			</ModalBody>
 			<ModalFooter>
-				<button onClick={props.close} className="btn btn-primary">
-					Close Modal
+				<button onClick={props.close} className={btnStyles.btn}>
+					Create Student
 				</button>
 			</ModalFooter>
 		</Modal>

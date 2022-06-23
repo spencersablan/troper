@@ -2,10 +2,9 @@ import { collection, query, where } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuth } from "../contexts/AuthContext";
 import { firestore } from "../firebase/firebase-db";
-import ModalAddStudent from "./ModalAddStudent";
-
 import ModalService from "../services/ModalService";
-import styles from "../styles/components/home.module.scss";
+import styles from "../styles/modules/home.module.scss";
+import ModalAddStudent from "./ModalAddStudent";
 
 export default function Home() {
 	// User

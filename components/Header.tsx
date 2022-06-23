@@ -1,5 +1,5 @@
 import HeaderUser from "./HeaderUser";
-import styles from "../styles/components/header.module.scss";
+import styles from "../styles/modules/header.module.scss";
 
 export default function Header() {
 	return (

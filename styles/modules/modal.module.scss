@@ -23,4 +23,16 @@
 }
 
 .modalContent {
+	display: flex;
+	flex-direction: column;
+	row-gap: 32px;
+}
+
+.modalHeader {
+	font-weight: 700;
+	font-size: 32px;
+
+	@include sm {
+		font-size: 40px;
+	}
 }

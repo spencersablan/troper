@@ -4,7 +4,7 @@ const path = require("path");
 const nextConfig = {
 	reactStrictMode: false,
 	sassOptions: {
-		includePaths: [path.join(__dirname, "styles", "components")],
+		includePaths: [path.join(__dirname, "styles", "modules"), path.join(__dirname, "styles", "components")],
 		prependData: `@import "../utils";`,
 	},
 };
