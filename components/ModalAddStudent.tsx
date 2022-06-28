@@ -47,7 +47,7 @@ export default function ModalAddStudent(props) {
 
 			<ModalBody>
 				<div className={mainStyles.body}>
-					<input ref={firstName} className={inputStyles.input} placeholder="First Name" />
+					<input ref={firstName} className={inputStyles.input} placeholder="First Name" autoFocus />
 					<input ref={lastName} className={inputStyles.input} placeholder="Last Name" />
 					<label className={toggleStyles.toggle}>
 						<input ref={gender} type="checkbox" className={toggleStyles.checkbox} checked={checked} />
