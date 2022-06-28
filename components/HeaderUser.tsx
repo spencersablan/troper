@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import styles from "../styles/modules/headerUser.module.scss";
 
@@ -21,5 +22,4 @@ export default function HeaderUser() {
 			)}
 		</>
 	);
-	return <div>HeaderUser</div>;
 }
