@@ -3,6 +3,7 @@
 	flex-direction: column;
 	row-gap: 42px;
 	width: 100%;
+	max-height: 100%;
 
 	@include md {
 		max-width: 900px;
@@ -10,7 +11,7 @@
 	}
 
 	@include lg {
-		width: unset;
+		width: 100%;
 		max-width: 1072px;
 	}
 
@@ -29,6 +30,7 @@
 		display: flex;
 		flex-direction: column;
 		row-gap: 32px;
+		position: relative;
 
 		.studentsHeader {
 			display: flex;
@@ -57,17 +59,20 @@
 	.studentList {
 		display: grid;
 		row-gap: 16px;
+		max-height: 100%;
 
 		@include sm {
 			display: grid;
-			grid-template-columns: 1fr 1fr;
+			grid-template-columns: repeat(2, 1fr);
 			column-gap: 16px;
 		}
 
 		@include md {
-			display: flex;
-			flex-direction: row;
-			flex-wrap: wrap;
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		@include lg {
+			grid-template-columns: repeat(4, 1fr);
 			row-gap: 24px;
 			column-gap: 24px;
 		}
@@ -82,11 +87,6 @@
 		font-weight: 700;
 		font-size: 16px;
 		transition: 0.3s;
-		perspective: 0;
-
-		@include md {
-			width: 250px;
-		}
 
 		&:hover {
 			transform: translateY(-5px);
