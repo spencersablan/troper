@@ -16,6 +16,9 @@ export default function ModalAddStudent(props) {
 	// Handle gender toggler
 	const [checked, setChecked] = useState(false);
 
+	// Enable/disable Create Student Button
+	const [createBtnEnabled, setCreateBtnEnabled] = useState(false);
+
 	// User
 	const { user, loading, error } = useAuth();
 
@@ -41,15 +44,32 @@ export default function ModalAddStudent(props) {
 		props.close();
 	};
 
+	const handleNameInput = (event) => {
+		if (event.target.value.length) return setCreateBtnEnabled(true);
+
+		setCreateBtnEnabled(false);
+	};
+
+	const toggleGender = (event) => {
+		if (event.keyCode !== 13) return;
+
+		setChecked(!checked);
+	};
 	return (
 		<Modal>
 			<ModalHeader>Add Student</ModalHeader>
 
 			<ModalBody>
 				<div className={mainStyles.body}>
-					<input ref={firstName} className={inputStyles.input} placeholder="First Name" autoFocus />
+					<input
+						ref={firstName}
+						className={inputStyles.input}
+						placeholder="First Name*"
+						onChange={handleNameInput}
+						autoFocus
+					/>
 					<input ref={lastName} className={inputStyles.input} placeholder="Last Name" />
-					<label className={toggleStyles.toggle}>
+					<label tabIndex={0} onKeyDown={toggleGender} className={toggleStyles.toggle}>
 						<input ref={gender} type="checkbox" className={toggleStyles.checkbox} checked={checked} />
 						<div className={`${toggleStyles.option} ${toggleStyles.optionA}`} onClick={() => setChecked(true)}>
 							Male
@@ -62,7 +82,11 @@ export default function ModalAddStudent(props) {
 			</ModalBody>
 
 			<ModalFooter>
-				<button onClick={addStudent} className={btnStyles.btn}>
+				<button
+					type="submit"
+					onClick={addStudent}
+					className={`${btnStyles.btn} ${!createBtnEnabled ? btnStyles.disabled : ""}`}
+				>
 					Create Student
 				</button>
 			</ModalFooter>
