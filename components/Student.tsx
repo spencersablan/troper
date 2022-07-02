@@ -4,6 +4,8 @@ import SvgSettings from "./SvgSettings";
 import styles from "../styles/modules/student.module.scss";
 import btnStyles from "../styles/components/button.module.scss";
 import tabsStyles from "../styles/components/tabs.module.scss";
+import inputStyles from "../styles/components/input.module.scss";
+import SvgPlus from "./SvgPlus";
 
 enum Quarters {
 	Q1,
@@ -33,6 +35,9 @@ export default function Student({ student, back }) {
 				</a>
 			</div>
 			<div className={styles.studentFormHeader}>
+				<h2 className={styles.studentName}>
+					{student.firstName} {student.lastName}
+				</h2>
 				<div className={tabsStyles.tabsContainer}>
 					<div
 						className={`${tabsStyles.tab} ${activeQuarter === Quarters.Q1 && tabsStyles.active}`}
@@ -59,9 +64,16 @@ export default function Student({ student, back }) {
 						Q4
 					</div>
 				</div>
-				<h2 className={styles.studentName}>
-					{student.firstName} {student.lastName}
-				</h2>
+			</div>
+
+			<div className={styles.builder}>
+				<textarea className={`${styles.output} ${inputStyles.textArea}`}></textarea>
+				<div className={styles.templateSection}>
+					<SvgPlus className={styles.addTemplateIcon} />
+					<div className={styles.templateContainer}>
+						<div className={styles.template}>{student.firstName} is really cool.</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

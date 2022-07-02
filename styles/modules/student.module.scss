@@ -26,10 +26,41 @@
 .studentFormHeader {
 	display: flex;
 	flex-direction: column;
-	row-gap: 24px;
+	padding-bottom: 16px;
+	row-gap: 8px;
 
 	@include sm {
-		flex-direction: row-reverse;
+		flex-direction: row;
 		justify-content: space-between;
 	}
+}
+
+.builder {
+	display: flex;
+	flex-direction: column;
+	row-gap: 40px;
+}
+
+.templateSection {
+	display: flex;
+	flex-direction: column;
+	row-gap: 8px;
+}
+
+.templateContainer {
+	display: flex;
+	flex-direction: column;
+	row-gap: 8px;
+}
+
+.template {
+	padding: 24px 16px;
+	background: $ds-white;
+	color: $ds-gray-10;
+	font-size: 16px;
+}
+
+.addTemplateIcon {
+	fill: $ds-azure;
+	align-self: flex-end;
 }
