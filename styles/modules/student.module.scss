@@ -1,0 +1,27 @@
+.back {
+	display: flex;
+	flex-direction: row;
+	color: $ds-gray-4;
+	fill: currentColor;
+	font-size: 16px;
+	font-weight: 700;
+	margin-left: -7px;
+	transition: 0.4s;
+
+	&:hover {
+		color: $ds-gray-6;
+
+		.backChevron {
+			transform: translateX(-5px);
+		}
+	}
+
+	.backChevron {
+		transition: inherit;
+	}
+
+	.backText {
+		font-size: 16px;
+		font-weight: 700;
+	}
+}
