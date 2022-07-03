@@ -60,7 +60,22 @@
 	font-size: 16px;
 }
 
+.addTemplate {
+	@extend .template;
+	min-height: unset;
+}
+
+.addTemplateIconContainer {
+	display: contents;
+}
+
 .addTemplateIcon {
 	fill: $ds-azure;
 	align-self: flex-end;
+	transition: 0.3s;
+
+	&.cancel {
+		fill: $ds-alizarin-red;
+		transform: rotate(135deg);
+	}
 }

@@ -1,16 +1,16 @@
 import { doc, setDoc } from "firebase/firestore";
+import { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../contexts/AuthContext";
 import { firestore } from "../firebase/firebase-db";
+import btnStyles from "../styles/components/button.module.scss";
+import inputStyles from "../styles/components/input.module.scss";
+import toggleStyles from "../styles/components/toggle.module.scss";
+import mainStyles from "../styles/modules/modal-add-student.module.scss";
 import Modal from "./Modal";
 import ModalBody from "./ModalBody";
 import ModalFooter from "./ModalFooter";
 import ModalHeader from "./ModalHeader";
-import mainStyles from "../styles/modules/modal-add-student.module.scss";
-import btnStyles from "../styles/components/button.module.scss";
-import inputStyles from "../styles/components/input.module.scss";
-import toggleStyles from "../styles/components/toggle.module.scss";
-import { useState, useRef } from "react";
 
 export default function ModalAddStudent(props) {
 	// Handle gender toggler
