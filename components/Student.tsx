@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SvgChevron from "./SvgChevron";
 import SvgSettings from "./SvgSettings";
 import styles from "../styles/modules/student.module.scss";
@@ -8,8 +8,8 @@ import inputStyles from "../styles/components/input.module.scss";
 import SvgPlus from "./SvgPlus";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../contexts/AuthContext";
-import { doc, setDoc } from "firebase/firestore";
-import { firestore } from "../firebase/firebase-db";
+import { collection, doc, setDoc, query, where, getDocs } from "firebase/firestore";
+import { firestore, Template } from "../firebase/firebase-db";
 
 enum Quarters {
 	Q1 = 1,
@@ -20,28 +20,53 @@ enum Quarters {
 
 export default function Student({ student, back }) {
 	const [activeQuarter, setActiveQuarter] = useState(Quarters.Q1);
+	const [templates, setTemplates] = useState(null);
 	const [addingTemplate, setAddingTemplate] = useState(false);
 
+	// Form functionality
+	const output = useRef(null as HTMLTextAreaElement | null);
 	/** Show/hide textarea to add template */
 	const toggleAddingTemplate = () => {
 		setAddingTemplate(!addingTemplate);
+	};
+
+	const updateOutput = (textToAdd: string) => {
+		output.current.value = output.current.value + textToAdd;
 	};
 
 	// User
 	const { user, loading, error } = useAuth();
 
 	// Manipulating DB
-	const newTemplateEl = useRef<HTMLDivElement>(null);
-	/** Stores new template in DB */
-	const submitNewTemplate = async () => {
-		const newTemplateID = uuidv4();
-		const templateRef = doc(firestore, "users", user.uid, "templates", newTemplateID);
+	const newTemplateEl = useRef(null as HTMLInputElement | null);
+	const templateCollection = collection(firestore, "users", user.uid, "templates");
 
-		await setDoc(templateRef, {
+	/** Stores new template in DB */
+	const submitNewTemplate = () => {
+		const newTemplateID = uuidv4();
+		const templateRef = doc(templateCollection, newTemplateID);
+		const newTemplate: Template = {
 			quarters: [activeQuarter],
-			template: newTemplateEl.current.innerText,
-		});
+			text: newTemplateEl.current.innerText,
+			templateID: newTemplateID,
+		};
+
+		setDoc(templateRef, newTemplate);
 	};
+
+	const updateTemplatesInQuarter = async () => {
+		let templatesInQuarter = [];
+		const templatesQuery = query(templateCollection, where("quarters", "array-contains", activeQuarter));
+		const querySnapshot = await getDocs(templatesQuery);
+		querySnapshot.forEach((doc) => {
+			templatesInQuarter.push(doc.data());
+		});
+		setTemplates(templatesInQuarter);
+	};
+
+	useEffect(() => {
+		updateTemplatesInQuarter();
+	}, [activeQuarter]);
 
 	return (
 		<div className={styles.student}>
@@ -93,7 +118,7 @@ export default function Student({ student, back }) {
 			</div>
 
 			<div className={styles.builder}>
-				<textarea className={`${styles.output} ${inputStyles.textArea}`}></textarea>
+				<textarea ref={output} className={`${styles.output} ${inputStyles.textArea}`}></textarea>
 				<div className={styles.templateSection}>
 					<div className={styles.addTemplateIconContainer} onClick={toggleAddingTemplate}>
 						<SvgPlus className={`${styles.addTemplateIcon} ${addingTemplate && styles.cancel}`} />
@@ -108,7 +133,19 @@ export default function Student({ student, back }) {
 								contentEditable
 							></div>
 						)}
-						<div className={styles.template}>{student.firstName} is really cool.</div>
+
+						{templates &&
+							templates.map((template: Template) => {
+								return (
+									<div
+										onClick={() => updateOutput(template.text)}
+										key={template.templateID}
+										className={styles.template}
+									>
+										{template.text}
+									</div>
+								);
+							})}
 					</div>
 				</div>
 			</div>

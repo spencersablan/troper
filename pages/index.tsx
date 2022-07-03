@@ -15,7 +15,7 @@ export default function Main() {
 			<div className={styles.body}>
 				{loading && <h4>Loading...</h4>}
 
-				{!user && <Login />}
+				{!user && !loading && <Login />}
 
 				{user && <Home />}
 			</div>
