@@ -8,7 +8,7 @@ import inputStyles from "../styles/components/input.module.scss";
 import SvgPlus from "./SvgPlus";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../contexts/AuthContext";
-import { collection, doc, setDoc, query, where, getDocs } from "firebase/firestore";
+import { collection, doc, setDoc, query, where, getDocs, getDoc } from "firebase/firestore";
 import { firestore, Template } from "../firebase/firebase-db";
 
 enum Quarters {
@@ -18,26 +18,52 @@ enum Quarters {
 	Q4,
 }
 
+interface StudentReport {
+	templateIDs: string[];
+	output: string;
+}
+
 export default function Student({ student, back }) {
 	const [activeQuarter, setActiveQuarter] = useState(Quarters.Q1);
-	const [templates, setTemplates] = useState(null);
+	const [templates, setTemplates] = useState(null as Template[]);
 	const [addingTemplate, setAddingTemplate] = useState(false);
+	const [currentStudentReport, setCurrentStudentReport] = useState({ output: "", templateIDs: [] });
+
+	useEffect(() => {
+		updateTemplatesInQuarter();
+		changeActiveReport();
+	}, [activeQuarter]);
+
+	useEffect(() => {
+		reportEl.current.value = currentStudentReport.output;
+	}, [currentStudentReport]);
 
 	// Form functionality
-	const output = useRef(null as HTMLTextAreaElement | null);
+	const reportEl = useRef(null as HTMLTextAreaElement | null);
 	/** Show/hide textarea to add template */
 	const toggleAddingTemplate = () => {
 		setAddingTemplate(!addingTemplate);
 	};
 
-	const updateOutput = (textToAdd: string) => {
-		output.current.value = output.current.value + textToAdd;
-	};
-
 	// User
 	const { user, loading, error } = useAuth();
 
-	// Manipulating DB
+	// Report controls
+	const reportCollection = collection(firestore, "students", student.studentID, "reports");
+	const reportRef = doc(reportCollection, activeQuarter.toString());
+
+	/** Changes which quarter report the user is viewing */
+	const changeActiveReport = async () => {
+		const reportSnapshot = await getDoc(reportRef);
+
+		if (!reportSnapshot.exists()) {
+			return setCurrentStudentReport({ output: "", templateIDs: [] });
+		}
+
+		setCurrentStudentReport(reportSnapshot.data() as StudentReport);
+	};
+
+	// Template Controls
 	const newTemplateEl = useRef(null as HTMLInputElement | null);
 	const templateCollection = collection(firestore, "users", user.uid, "templates");
 
@@ -63,10 +89,6 @@ export default function Student({ student, back }) {
 		});
 		setTemplates(templatesInQuarter);
 	};
-
-	useEffect(() => {
-		updateTemplatesInQuarter();
-	}, [activeQuarter]);
 
 	return (
 		<div className={styles.student}>
@@ -118,7 +140,7 @@ export default function Student({ student, back }) {
 			</div>
 
 			<div className={styles.builder}>
-				<textarea ref={output} className={`${styles.output} ${inputStyles.textArea}`}></textarea>
+				<textarea ref={reportEl} className={`${styles.report} ${inputStyles.textArea}`}></textarea>
 				<div className={styles.templateSection}>
 					<div className={styles.addTemplateIconContainer} onClick={toggleAddingTemplate}>
 						<SvgPlus className={`${styles.addTemplateIcon} ${addingTemplate && styles.cancel}`} />
@@ -137,11 +159,7 @@ export default function Student({ student, back }) {
 						{templates &&
 							templates.map((template: Template) => {
 								return (
-									<div
-										onClick={() => updateOutput(template.text)}
-										key={template.templateID}
-										className={styles.template}
-									>
+									<div key={template.templateID} className={styles.template} onClick={() => {}}>
 										{template.text}
 									</div>
 								);
