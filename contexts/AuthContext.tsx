@@ -1,11 +1,16 @@
 import React, { useContext } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase-db";
+import { signOut } from "firebase/auth";
 
 const AuthContext = React.createContext(null);
 
 export function useAuth() {
 	return useContext(AuthContext);
+}
+
+export function logout() {
+	signOut(auth);
 }
 
 export function AuthProvider({ children }) {

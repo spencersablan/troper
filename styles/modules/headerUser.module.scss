@@ -3,9 +3,13 @@
 	flex-direction: row;
 	align-items: center;
 	column-gap: 10px;
+	position: relative;
+	cursor: pointer;
 
 	&:hover {
-		cursor: pointer;
+		.submenu {
+			display: block;
+		}
 	}
 
 	.circle {
@@ -23,6 +27,47 @@
 			display: block;
 			font-size: 14px;
 			font-weight: 700;
+		}
+	}
+
+	.submenu {
+		display: none;
+		position: absolute;
+		top: calc(100% + 16px);
+		right: 0;
+		background: $ds-white;
+		border-radius: 6px;
+		min-width: 100%;
+		box-shadow: 0 0 10px rgb(0, 0, 0, 20%);
+		padding: 8px 0;
+
+		@include sm {
+			right: unset;
+			left: 0;
+		}
+
+		&:before {
+			content: "";
+			position: absolute;
+			bottom: 100%;
+			height: 16px;
+			width: 100%;
+		}
+
+		&.active {
+			display: block;
+		}
+
+		.submenuOption {
+			display: block;
+			padding: 8px;
+			color: $ds-gray-10;
+			font-weight: 700;
+			cursor: pointer;
+
+			&:hover {
+				background: $ds-gray-1;
+			}
 		}
 	}
 }

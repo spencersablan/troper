@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import Login from "../components/Login";
 import Home from "../components/Home";
@@ -9,13 +9,15 @@ import ModalRoot from "../components/ModalRoot";
 export default function Main() {
 	const { user, loading, error } = useAuth();
 
+	useEffect(() => {}, [user, loading, error]);
+
 	return (
 		<div className={styles.wrapper}>
 			<Header />
 			<div className={styles.body}>
-				{loading && <h4>Loading...</h4>}
-
 				{!user && !loading && <Login />}
+
+				{loading && <h4>Loading...</h4>}
 
 				{user && <Home />}
 			</div>
