@@ -10,8 +10,10 @@ import ModalFooter from "./ModalFooter";
 import ModalHeader from "./ModalHeader";
 import { firestore, Template } from "../firebase/firebase-db";
 import { useAuth } from "../contexts/AuthContext";
+import { PronounService } from "../services/PronounService";
 
 interface Props {
+	studentFirstName: string;
 	activeQuarter: number;
 	editing?: boolean;
 	close: () => void;
@@ -20,10 +22,10 @@ interface Props {
 export default function ModalAddTemplate(props: Props) {
 	const [saveBtnEnabled, setSaveBtnEnabled] = useState(false);
 
-	// User
+	/* ---------------------------------- User ---------------------------------- */
 	const { user, loading, error } = useAuth();
 
-	// Firestore
+	/* -------------------------------- Firestore ------------------------------- */
 	const templateCollection = collection(firestore, "users", user.uid, "templates");
 
 	const template = useRef(null);
@@ -36,9 +38,11 @@ export default function ModalAddTemplate(props: Props) {
 	const saveNewTemplate = () => {
 		const newTemplateID = uuidv4();
 		const templateRef = doc(templateCollection, newTemplateID);
+		const newText = PronounService.toDB(template.current.value, props.studentFirstName);
+
 		const newTemplate: Template = {
 			quarters: [props.activeQuarter],
-			text: template.current.value,
+			text: newText,
 			templateID: newTemplateID,
 		};
 

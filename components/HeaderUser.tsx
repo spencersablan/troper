@@ -9,7 +9,7 @@ export default function HeaderUser() {
 		<>
 			{!user && <div></div>}
 
-			{user && (
+			{user && !loading && (
 				<div className={styles.headerUser}>
 					<div
 						className={styles.circle}

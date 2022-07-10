@@ -13,6 +13,7 @@ import ModalAddStudent from "./ModalAddStudent";
 import SvgChevron from "./SvgChevron";
 import SvgPlus from "./SvgPlus";
 import SvgSettings from "./SvgSettings";
+import { PronounService } from "../services/PronounService";
 
 enum Quarters {
 	Q1 = 1,
@@ -29,13 +30,6 @@ interface Props {
 export default function Student({ studentID, back }: Props) {
 	const [activeQuarter, setActiveQuarter] = useState(Quarters.Q1);
 
-	/* --------------------------- Form functionality --------------------------- */
-	const reportEl = useRef(null as HTMLTextAreaElement | null);
-
-	const openAddTemplateModal = () => {
-		ModalService.open(ModalAddTemplate, { activeQuarter });
-	};
-
 	/* ---------------------------------- User ---------------------------------- */
 	const { user, loading, error } = useAuth();
 
@@ -48,7 +42,7 @@ export default function Student({ studentID, back }: Props) {
 	const addToReport = (templateToAdd: string) => {
 		const newReport = `${report?.output || ""}${report?.output.length ? " " : ""}${templateToAdd}`;
 
-		setDoc(reportRef, { output: newReport });
+		setDoc(reportRef, { output: PronounService.toClient(newReport, student.gender, student.firstName) });
 	};
 
 	/** Handles user typing into report text area */
@@ -70,6 +64,13 @@ export default function Student({ studentID, back }: Props) {
 		const { firstName, lastName, gender, studentID } = student;
 		const currentStudent = { firstName, lastName, gender, studentID };
 		ModalService.open(ModalAddStudent, { currentStudent, back });
+	};
+
+	/* --------------------------- Form functionality --------------------------- */
+	const reportEl = useRef(null as HTMLTextAreaElement | null);
+
+	const openAddTemplateModal = () => {
+		ModalService.open(ModalAddTemplate, { activeQuarter, studentFirstName: student.firstName });
 	};
 
 	return (
@@ -145,7 +146,7 @@ export default function Student({ studentID, back }: Props) {
 													addToReport(template.text);
 												}}
 											>
-												{template.text}
+												{PronounService.toClient(template.text, student.gender, student.firstName)}
 											</div>
 										);
 									})}
