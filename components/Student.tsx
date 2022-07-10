@@ -6,10 +6,11 @@ import btnStyles from "../styles/components/button.module.scss";
 import tabsStyles from "../styles/components/tabs.module.scss";
 import inputStyles from "../styles/components/input.module.scss";
 import SvgPlus from "./SvgPlus";
-import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../contexts/AuthContext";
 import { collection, doc, setDoc, query, where, getDocs, getDoc } from "firebase/firestore";
 import { firestore, Template } from "../firebase/firebase-db";
+import ModalService from "../services/ModalService";
+import ModalAddTemplate from "./ModalAddTemplate";
 
 enum Quarters {
 	Q1 = 1,
@@ -49,8 +50,9 @@ export default function Student({ student, back }) {
 	// Form functionality
 	const reportEl = useRef(null as HTMLTextAreaElement | null);
 	/** Show/hide textarea to add template */
-	const toggleAddingTemplate = () => {
-		setAddingTemplate(!addingTemplate);
+
+	const openAddTemplateModal = () => {
+		ModalService.open(ModalAddTemplate, { activeQuarter });
 	};
 
 	// User
@@ -92,21 +94,6 @@ export default function Student({ student, back }) {
 	// Template Controls
 	const newTemplateEl = useRef(null as HTMLInputElement | null);
 	const templateCollection = collection(firestore, "users", user.uid, "templates");
-
-	/** Stores new template in DB */
-	const submitNewTemplate = () => {
-		if (!newTemplateEl.current.innerText.length) return;
-
-		const newTemplateID = uuidv4();
-		const templateRef = doc(templateCollection, newTemplateID);
-		const newTemplate: Template = {
-			quarters: [activeQuarter],
-			text: newTemplateEl.current.innerText,
-			templateID: newTemplateID,
-		};
-
-		setDoc(templateRef, newTemplate);
-	};
 
 	const updateTemplatesInQuarter = async () => {
 		let templatesInQuarter = [];
@@ -174,20 +161,10 @@ export default function Student({ student, back }) {
 					onChange={(e) => handleTextAreaChange(e.target.value)}
 				></textarea>
 				<div className={styles.templateSection}>
-					<div className={styles.addTemplateIconContainer} onClick={toggleAddingTemplate}>
+					<div className={styles.addTemplateIconContainer} onClick={openAddTemplateModal}>
 						<SvgPlus className={`${styles.addTemplateIcon} ${addingTemplate && styles.cancel}`} />
 					</div>
 					<div className={styles.templateContainer}>
-						{addingTemplate && (
-							<div
-								ref={newTemplateEl}
-								onBlur={submitNewTemplate}
-								onKeyDown={(e) => e.key === "Enter" && submitNewTemplate()}
-								className={`${styles.addTemplate} ${inputStyles.textArea}`}
-								contentEditable
-							></div>
-						)}
-
 						{templates &&
 							templates.map((template: Template) => {
 								return (
