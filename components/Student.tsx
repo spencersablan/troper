@@ -1,16 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
-import SvgChevron from "./SvgChevron";
-import SvgSettings from "./SvgSettings";
-import styles from "../styles/modules/student.module.scss";
-import btnStyles from "../styles/components/button.module.scss";
-import tabsStyles from "../styles/components/tabs.module.scss";
-import inputStyles from "../styles/components/input.module.scss";
-import SvgPlus from "./SvgPlus";
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { useEffect, useRef, useState } from "react";
+import { useCollectionData, useDocumentData } from "react-firebase-hooks/firestore";
 import { useAuth } from "../contexts/AuthContext";
-import { collection, doc, setDoc, query, where, getDocs, getDoc } from "firebase/firestore";
 import { firestore, Template } from "../firebase/firebase-db";
 import ModalService from "../services/ModalService";
+import btnStyles from "../styles/components/button.module.scss";
+import inputStyles from "../styles/components/input.module.scss";
+import tabsStyles from "../styles/components/tabs.module.scss";
+import styles from "../styles/modules/student.module.scss";
 import ModalAddTemplate from "./ModalAddTemplate";
+import SvgChevron from "./SvgChevron";
+import SvgPlus from "./SvgPlus";
+import SvgSettings from "./SvgSettings";
 
 enum Quarters {
 	Q1 = 1,
@@ -26,20 +27,7 @@ interface StudentReport {
 
 export default function Student({ student, back }) {
 	const [activeQuarter, setActiveQuarter] = useState(Quarters.Q1);
-	const [templates, setTemplates] = useState(null as Template[]);
 	const [addingTemplate, setAddingTemplate] = useState(false);
-	const [currentStudentReport, setCurrentStudentReport] = useState({ output: "", templateIDs: [] } as StudentReport);
-
-	useEffect(() => {
-		updateTemplatesInQuarter();
-		changeActiveReport();
-	}, [activeQuarter]);
-
-	useEffect(() => {
-		reportEl.current.value = currentStudentReport.output;
-
-		setDoc(reportRef, currentStudentReport);
-	}, [currentStudentReport]);
 
 	useEffect(() => {
 		if (addingTemplate) {
@@ -49,7 +37,6 @@ export default function Student({ student, back }) {
 
 	// Form functionality
 	const reportEl = useRef(null as HTMLTextAreaElement | null);
-	/** Show/hide textarea to add template */
 
 	const openAddTemplateModal = () => {
 		ModalService.open(ModalAddTemplate, { activeQuarter });
@@ -61,49 +48,34 @@ export default function Student({ student, back }) {
 	// Report controls
 	const reportCollection = collection(firestore, "students", student.studentID, "reports");
 	const reportRef = doc(reportCollection, activeQuarter.toString());
-
-	/** Changes which quarter report the user is viewing */
-	const changeActiveReport = async () => {
-		const reportSnapshot = await getDoc(reportRef);
-
-		if (!reportSnapshot.exists()) {
-			return setCurrentStudentReport({ output: "", templateIDs: [] });
-		}
-
-		setCurrentStudentReport(reportSnapshot.data() as StudentReport);
-	};
+	const [report, reportLoading, reportError] = useDocumentData(reportRef);
+	const [currentStudentReport, setCurrentStudentReport] = useState(report as StudentReport);
 
 	/** Adds template to report */
 	const addToReport = (templateToAdd: { templateID: string; text: string }) => {
-		const newOutput = `${currentStudentReport.output} ${templateToAdd.text}`;
-		const newTemplateIDs = [...currentStudentReport.templateIDs, templateToAdd.templateID];
+		const newOutput = `${report?.output || ""} ${templateToAdd.text}`;
+		const newTemplateIDs = report?.templateIDs
+			? [...report.templateIDs, templateToAdd.templateID]
+			: [templateToAdd.templateID];
 
 		const updatedStudentReport: StudentReport = {
 			output: newOutput,
 			templateIDs: newTemplateIDs,
 		};
 
-		setCurrentStudentReport(updatedStudentReport);
+		setDoc(reportRef, updatedStudentReport);
 	};
 
 	/** Handles user typing into report text area */
 	const handleTextAreaChange = (value: string) => {
-		setCurrentStudentReport({ output: value, templateIDs: currentStudentReport.templateIDs });
+		setDoc(reportRef, { output: value, templateIDs: report?.templateIDs || [] });
 	};
 
 	// Template Controls
 	const newTemplateEl = useRef(null as HTMLInputElement | null);
 	const templateCollection = collection(firestore, "users", user.uid, "templates");
-
-	const updateTemplatesInQuarter = async () => {
-		let templatesInQuarter = [];
-		const templatesQuery = query(templateCollection, where("quarters", "array-contains", activeQuarter));
-		const querySnapshot = await getDocs(templatesQuery);
-		querySnapshot.forEach((doc) => {
-			templatesInQuarter.push(doc.data());
-		});
-		setTemplates(templatesInQuarter);
-	};
+	const templatesQuery = query(templateCollection, where("quarters", "array-contains", activeQuarter));
+	const [templates, tempalatesLoading, templatesError] = useCollectionData(templatesQuery);
 
 	return (
 		<div className={styles.student}>
@@ -159,6 +131,7 @@ export default function Student({ student, back }) {
 					ref={reportEl}
 					className={`${styles.report} ${inputStyles.textArea}`}
 					onChange={(e) => handleTextAreaChange(e.target.value)}
+					value={report ? report.output : ""}
 				></textarea>
 				<div className={styles.templateSection}>
 					<div className={styles.addTemplateIconContainer} onClick={openAddTemplateModal}>
