@@ -18,6 +18,10 @@
 		background-color: $ds-gray-3;
 		pointer-events: none;
 	}
+
+	&.danger {
+		background-color: $ds-alizarin-red;
+	}
 }
 
 .iconTextBtn {

@@ -10,3 +10,8 @@ export interface Template {
 	quarters: number[];
 	text: string;
 }
+
+export enum Genders {
+	male = "Male",
+	female = "Female",
+}

@@ -9,13 +9,13 @@ import ModalAddStudent from "./ModalAddStudent";
 import Student from "./Student";
 
 export default function Home() {
-	// User
+	/* ---------------------------------- User ---------------------------------- */
 	const { user, loading, error } = useAuth();
 
-	// Selected Student
+	/* ---------------------------- Selected Student ---------------------------- */
 	const [selectedStudent, setSelectedStudent] = useState(null);
 
-	// Students
+	/* -------------------------------- Students -------------------------------- */
 	const studentCollection = collection(firestore, "students");
 	const studentsQuery = query(studentCollection, where("teacherID", "==", user.uid));
 	const [students, studentsLoading, studentsError] = useCollectionData(studentsQuery);
@@ -43,7 +43,7 @@ export default function Home() {
 								students.map((student) => {
 									return (
 										<a
-											onClick={() => setSelectedStudent(student)}
+											onClick={() => setSelectedStudent(student.studentID)}
 											key={student.studentID}
 											className={styles.student}
 										>
@@ -56,7 +56,7 @@ export default function Home() {
 				</div>
 			)}
 
-			{selectedStudent && <Student student={selectedStudent} back={backToHome} />}
+			{selectedStudent && <Student studentID={selectedStudent} back={backToHome} />}
 		</>
 	);
 }
