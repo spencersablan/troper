@@ -27,7 +27,7 @@ export default function Student({ student, back }) {
 	const [activeQuarter, setActiveQuarter] = useState(Quarters.Q1);
 	const [templates, setTemplates] = useState(null as Template[]);
 	const [addingTemplate, setAddingTemplate] = useState(false);
-	const [currentStudentReport, setCurrentStudentReport] = useState({ output: "", templateIDs: [] });
+	const [currentStudentReport, setCurrentStudentReport] = useState({ output: "", templateIDs: [] } as StudentReport);
 
 	useEffect(() => {
 		updateTemplatesInQuarter();
@@ -36,7 +36,15 @@ export default function Student({ student, back }) {
 
 	useEffect(() => {
 		reportEl.current.value = currentStudentReport.output;
+
+		setDoc(reportRef, currentStudentReport);
 	}, [currentStudentReport]);
+
+	useEffect(() => {
+		if (addingTemplate) {
+			newTemplateEl.current.focus();
+		}
+	}, [addingTemplate]);
 
 	// Form functionality
 	const reportEl = useRef(null as HTMLTextAreaElement | null);
@@ -63,12 +71,32 @@ export default function Student({ student, back }) {
 		setCurrentStudentReport(reportSnapshot.data() as StudentReport);
 	};
 
+	/** Adds template to report */
+	const addToReport = (templateToAdd: { templateID: string; text: string }) => {
+		const newOutput = `${currentStudentReport.output} ${templateToAdd.text}`;
+		const newTemplateIDs = [...currentStudentReport.templateIDs, templateToAdd.templateID];
+
+		const updatedStudentReport: StudentReport = {
+			output: newOutput,
+			templateIDs: newTemplateIDs,
+		};
+
+		setCurrentStudentReport(updatedStudentReport);
+	};
+
+	/** Handles user typing into report text area */
+	const handleTextAreaChange = (value: string) => {
+		setCurrentStudentReport({ output: value, templateIDs: currentStudentReport.templateIDs });
+	};
+
 	// Template Controls
 	const newTemplateEl = useRef(null as HTMLInputElement | null);
 	const templateCollection = collection(firestore, "users", user.uid, "templates");
 
 	/** Stores new template in DB */
 	const submitNewTemplate = () => {
+		if (!newTemplateEl.current.innerText.length) return;
+
 		const newTemplateID = uuidv4();
 		const templateRef = doc(templateCollection, newTemplateID);
 		const newTemplate: Template = {
@@ -140,7 +168,11 @@ export default function Student({ student, back }) {
 			</div>
 
 			<div className={styles.builder}>
-				<textarea ref={reportEl} className={`${styles.report} ${inputStyles.textArea}`}></textarea>
+				<textarea
+					ref={reportEl}
+					className={`${styles.report} ${inputStyles.textArea}`}
+					onChange={(e) => handleTextAreaChange(e.target.value)}
+				></textarea>
 				<div className={styles.templateSection}>
 					<div className={styles.addTemplateIconContainer} onClick={toggleAddingTemplate}>
 						<SvgPlus className={`${styles.addTemplateIcon} ${addingTemplate && styles.cancel}`} />
@@ -150,7 +182,7 @@ export default function Student({ student, back }) {
 							<div
 								ref={newTemplateEl}
 								onBlur={submitNewTemplate}
-								onKeyDown={(e) => e.key === "Enter" && submitNewTemplate}
+								onKeyDown={(e) => e.key === "Enter" && submitNewTemplate()}
 								className={`${styles.addTemplate} ${inputStyles.textArea}`}
 								contentEditable
 							></div>
@@ -159,7 +191,13 @@ export default function Student({ student, back }) {
 						{templates &&
 							templates.map((template: Template) => {
 								return (
-									<div key={template.templateID} className={styles.template} onClick={() => {}}>
+									<div
+										key={template.templateID}
+										className={styles.template}
+										onClick={() => {
+											addToReport({ templateID: template.templateID, text: template.text });
+										}}
+									>
 										{template.text}
 									</div>
 								);
