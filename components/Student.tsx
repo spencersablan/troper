@@ -20,11 +20,6 @@ enum Quarters {
 	Q4,
 }
 
-interface StudentReport {
-	templateIDs: string[];
-	output: string;
-}
-
 export default function Student({ student, back }) {
 	const [activeQuarter, setActiveQuarter] = useState(Quarters.Q1);
 	const [addingTemplate, setAddingTemplate] = useState(false);
@@ -49,26 +44,17 @@ export default function Student({ student, back }) {
 	const reportCollection = collection(firestore, "students", student.studentID, "reports");
 	const reportRef = doc(reportCollection, activeQuarter.toString());
 	const [report, reportLoading, reportError] = useDocumentData(reportRef);
-	const [currentStudentReport, setCurrentStudentReport] = useState(report as StudentReport);
 
 	/** Adds template to report */
-	const addToReport = (templateToAdd: { templateID: string; text: string }) => {
-		const newOutput = `${report?.output || ""} ${templateToAdd.text}`;
-		const newTemplateIDs = report?.templateIDs
-			? [...report.templateIDs, templateToAdd.templateID]
-			: [templateToAdd.templateID];
+	const addToReport = (templateToAdd: string) => {
+		const newReport = `${report?.output || ""}${report?.output.length ? " " : ""}${templateToAdd}`;
 
-		const updatedStudentReport: StudentReport = {
-			output: newOutput,
-			templateIDs: newTemplateIDs,
-		};
-
-		setDoc(reportRef, updatedStudentReport);
+		setDoc(reportRef, { output: newReport });
 	};
 
 	/** Handles user typing into report text area */
 	const handleTextAreaChange = (value: string) => {
-		setDoc(reportRef, { output: value, templateIDs: report?.templateIDs || [] });
+		setDoc(reportRef, { output: value });
 	};
 
 	// Template Controls
@@ -145,7 +131,7 @@ export default function Student({ student, back }) {
 										key={template.templateID}
 										className={styles.template}
 										onClick={() => {
-											addToReport({ templateID: template.templateID, text: template.text });
+											addToReport(template.text);
 										}}
 									>
 										{template.text}
